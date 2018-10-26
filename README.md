@@ -1,1 +1,1 @@
-# goose-bot
+# UB Goose Bot
