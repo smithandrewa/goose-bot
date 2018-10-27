@@ -5,6 +5,7 @@ import re
 from datetime import datetime
 import pdb
 import praw
+import socket
 
 #-----------vars---------------
 target_subreddit = 'UBreddit'
@@ -27,15 +28,25 @@ subreddit = reddit.subreddit(target_subreddit)
 print("READ ONLY TF: " + str(reddit.read_only))
 print("SUBREDDIT: " + subreddit.display_name)
 
+def is_connected():
+    try:
+        socket.create_connection(("www.google.com", 80))
+        return True
+    except OSError:
+        pass
+    return False
+    with open('gooseLog.txt', 'a') as l:
+        l.write(str(dt) + ': ' + 'INTERNET FAILURE' + '\n')
+
 #main function
 def gooseSubmissionChecker():
     if not os.path.isfile('gooseLog.txt'):
         with open('gooseLog.txt', 'w') as l:
             l.write('Init...\n')
-            l.write(str(dt) + ' ')
+            l.write(str(dt) + ': ')
     else:
         with open('gooseLog.txt', 'a') as l:
-            l.write(str(dt))
+            l.write(str(dt) +  ": ")
     if not os.path.isfile('posts_replied_to.txt'):
         posts_replied_to = []
         print("Creating File: posts_replied_to.txt")
@@ -66,6 +77,8 @@ def gooseSubmissionChecker():
             gooseCommentChecker(submission)
     except:
             print('Error, Aborting')
+            with open('gooseLog.txt', 'a') as l:
+                l.write('Error, Aborting' + '\n')
     finally:
         with open('posts_replied_to.txt', 'w') as f:
             for post_id in posts_replied_to:
@@ -99,5 +112,11 @@ def gooseCommentChecker(submission):
             f.write(comment_id + "\n")
             print('Updating: comments_replied_to.txt')
 
-gooseSubmissionChecker() #run script
-print('Done!')
+def run_goose():
+    if is_connected():
+        gooseSubmissionChecker()
+        print('Complete')
+    else:
+        print('INTERNET FAILURE')
+
+run_goose()
