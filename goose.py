@@ -11,7 +11,7 @@ import socket
 target_subreddit = 'UBreddit'
 praw_profile = 'bot1'
 comment_message = 'Honk!'
-current_working_dir = "/home/pi/goose_bot/"
+current_working_dir = "/home/pi/goose-bot/"
 #------------------------------
 
 #set date & time
